@@ -73,7 +73,8 @@ def update_arm(knob_x:ADC = x_knob_uni, knob_y:ADC = y_knob_uni, original_x = ge
         y_change = 0
     if change_in_x or change_in_y:
         #calculate the angle each servo has to move
-        try: shoulder_angle = calculate_shoulder(shoulder_angle, change_in_x,change_in_y)
+        try: 
+            shoulder_angle = calculate_shoulder(shoulder_angle, change_in_x,change_in_y)
         except:
             shoulder_angle = 0
             shoulder_angle = calculate_shoulder(shoulder_angle, change_in_x,change_in_y)
