@@ -1,3 +1,4 @@
+#Initializing Raspberry Pi Pico
 # Function to Initialize Raspberry Pi Pico
 def initialize_pico():
     """
@@ -31,11 +32,12 @@ def move_servos(angle1, angle2, pwm):
 def angle_to_duty_cycle(angle):
     """
     Convert servo angle to PWM duty cycle.
-    parameter angle: Servo angle in degrees
+    Input angle: Servo angle in degrees
     return: PWM duty cycle
     """
     # Code to convert angle to duty cycle based on servo specifications
     pass
+
 
 """"
 
