@@ -88,3 +88,13 @@ def control_pen(gcode_line, pen_switch_state):
     else:
         # Handle other G-Code commands or ignore if not relevant
         pass
+
+# Takes input from knob, converts to coordinates on paper 
+def covernt_potentionmeter_to_x(xval):
+    return xval
+
+def covernt_potentionmeter_to_y(yval):
+    return yval
+def read_potntionmeter(DegreeX,DegreeY):
+
+     return DegreeX,DegreeY
