@@ -61,12 +61,14 @@ def Angle_Converter():
 
 """"
 
-#Function to Control Pen - Lifting and Lowering
+#Controlling Pen - Lifting and Lowering
+
+
 def control_pen(gcode_line, pen_switch_state):
     """
     Control pen lifting and lowering based on G-Code commands and switch inputs.
-    parameter gcode_line: A line of G-Code
-    parameter pen_switch_state: State of the pen switch (up or down)
+    Input: A line of G-Code
+    pen_switch_state: State of the pen switch (up or down)
     """
 
 
@@ -90,13 +92,3 @@ def control_pen(gcode_line, pen_switch_state):
     else:
         # Handle other G-Code commands or ignore if not relevant
         pass
-
-# Takes input from knob, converts to coordinates on paper 
-def covernt_potentionmeter_to_x(xval):
-    return xval
-
-def covernt_potentionmeter_to_y(yval):
-    return yval
-def read_potntionmeter(DegreeX,DegreeY):
-
-     return DegreeX,DegreeY
