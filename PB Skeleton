@@ -47,8 +47,14 @@ Servo Control - Shoulder, Elbow, Pen
 Handling Analog Inputs - X and Y Potentiometers
 Converting Analog Inputs to Servo Angles
 
-
-
+def Angle_Converter():
+'''Define Mathematical Transformations to Map Servo Angles
+        -bi-directional servo control
+    
+    Input = analog values from CJ's Code
+        
+    Return = angles that are safe for use by servos
+'''
 
 
 """"
