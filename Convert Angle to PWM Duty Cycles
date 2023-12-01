@@ -1,0 +1,40 @@
+# Function to Convert Angle to PWM Duty Cycle
+def angles_to_duty_cycles(shoulderangle, elbowangle):
+    
+    MIN_ANGLE_DEGREES = 0  # Minimum servo angle in degrees
+    MAX_ANGLE_DEGREES = 180  # Maximum servo angle in degrees
+    MIN_DUTY_CYCLE = 1000  # Minimum PWM duty cycle value for the servo
+    MAX_DUTY_CYCLE = 2000  # Maximum PWM duty cycle value for the servo
+    
+    #process shoulder servo
+    if 0<= shoulderangle <= 180:
+        shoulderduty_cycle = int((500 + (2000) * (shoulderangle / 180))*65535/20000)
+
+    elif shoulderangle > 180:
+        shoulderduty_cycle = 8192
+    else:
+        shoulderduty_cycle = 1638
+    
+    #process elbow servo
+    if 0<= elbowangle <= 180:
+        elbowduty_cycle = int((500 + (2000) * (elbowangle / 180))*65535/20000)
+
+    elif elbowangle > 180:
+        elbowduty_cycle = 8192
+    else:
+        elbowduty_cycle = 1638
+        
+    print("Shoulder duty cycle is:",shoulderduty_cycle, "Elbow duty cycle is:", elbowduty_cycle)
+        
+    shoulder.duty_u16(shoulderduty_cycle)
+    elbow.duty_u16(elbowduty_cycle)
+    return shoulderduty_cycle, elbowduty_cycle
+
+initialize_pico()
+angles_to_duty_cycles (0, 90)
+sleep (3)
+angles_to_duty_cycles (90, 90)
+sleep (3)
+angles_to_duty_cycles (45, 90)
+sleep (3)
+angles_to_duty_cycles (45, 45)
