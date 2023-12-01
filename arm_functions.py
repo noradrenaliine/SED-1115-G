@@ -37,6 +37,10 @@ def move_elbow( angle:float, elbow:PWM = shoulder_pin):
     pwm_out = translate(angle)
     elbow.duty_u16(pwm_out)
 
+def move_servos(shoulder_angle, elbow_angle):
+    move_shoulder(shoulder_angle)
+    move_elbow(elbow_angle)
+
 def get_x_mm(knob:ADC = x_knob_uni):
     read_analog = knob.read_u16()
     millimetre_value = ((read_analog/65535)*x_max)
@@ -56,6 +60,9 @@ def calculate_elbow(angle = 0, change_in_x = 0,change_in_y = 0) -> int:
     angle += change_in_x + change_in_y #add the actual math here
     return angle
 
+def get_angles(x_difference, y_difference):
+    print('angles got')
+    return 0,0
 def update_arm(knob_x:ADC = x_knob_uni, knob_y:ADC = y_knob_uni, original_x = get_x_mm(), original_y = get_y_mm()):
     change_in_x = False
     change_in_y = False
