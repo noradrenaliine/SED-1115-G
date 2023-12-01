@@ -38,3 +38,42 @@ sleep (3)
 angles_to_duty_cycles (45, 90)
 sleep (3)
 angles_to_duty_cycles (45, 45)
+
+
+#Lifting and Lowering
+
+def translate(angle: float) -> int:
+    """
+    Converts an angle in degrees to the corresponding input
+    for the duty_u16 method of the servo class
+
+    See https://docs.micropython.org/en/latest/library/machine.PWM.html for more
+    details on the duty_u16 method
+    """
+
+    MIN = 1638 # 0 degrees
+    MAX = 8192 # 180 degrees
+    DEG = (MAX - MIN) / 180 # value per degree
+
+    # clamp angle to be between 0 and 180
+    angle = max(0, min(180, angle))
+
+    return int(angle * DEG + MIN)
+
+
+def wrist (gcode_line, pen_switch_state):    
+    
+    if 'PEN_UP' in gcode_line:
+        # Perform actions to lift the pen
+        print("Lifting the pen") 
+        servo.duty_u16(translate(0))
+                  
+            
+    elif 'PEN_DOWN' in gcode_line:
+        print("Lowering the pen")
+        servo.duty_u16(translate(30))
+                
+                  
+    else:
+        # Handle other G-Code commands or ignore if not relevant
+        print("Ignoring other G-Code commands")
