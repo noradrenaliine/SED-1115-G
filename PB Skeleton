@@ -1,3 +1,4 @@
+#Initializing Raspberry Pi Pico
 # Function to Initialize Raspberry Pi Pico
 def initialize_pico():
     """
@@ -31,11 +32,12 @@ def move_servos(angle1, angle2, pwm):
 def angle_to_duty_cycle(angle):
     """
     Convert servo angle to PWM duty cycle.
-    parameter angle: Servo angle in degrees
+    Input angle: Servo angle in degrees
     return: PWM duty cycle
     """
     # Code to convert angle to duty cycle based on servo specifications
     pass
+
 
 """"
 
@@ -47,18 +49,26 @@ Servo Control - Shoulder, Elbow, Pen
 Handling Analog Inputs - X and Y Potentiometers
 Converting Analog Inputs to Servo Angles
 
-
-
+def Angle_Converter():
+'''Define Mathematical Transformations to Map Servo Angles
+        -bi-directional servo control
+    
+    Input = analog values from CJ's Code
+        
+    Return = angles that are safe for use by servos
+'''
 
 
 """"
 
-#Function to Control Pen - Lifting and Lowering
+#Controlling Pen - Lifting and Lowering
+
+
 def control_pen(gcode_line, pen_switch_state):
     """
     Control pen lifting and lowering based on G-Code commands and switch inputs.
-    parameter gcode_line: A line of G-Code
-    parameter pen_switch_state: State of the pen switch (up or down)
+    Input: A line of G-Code
+    pen_switch_state: State of the pen switch (up or down)
     """
 
 
