@@ -35,7 +35,7 @@ def get_angles (cx,cy):
     
     return (servoA,servoB)
 
-def move_servos(shoulderangle, elbowangle):
+def move_servos(shoulderangle, elbowangle, formershoulder, formerelbow):
     
     MIN_ANGLE_DEGREES = 0  # Minimum servo angle in degrees
     MAX_ANGLE_DEGREES = 180  # Maximum servo angle in degrees
@@ -61,16 +61,56 @@ def move_servos(shoulderangle, elbowangle):
         elbowduty_cycle = 1638
         
     print("Shoulder duty cycle is:",shoulderduty_cycle, "Elbow duty cycle is:", elbowduty_cycle, end='\r')
-        
-    shoulder.duty_u16(shoulderduty_cycle)
-    elbow.duty_u16(elbowduty_cycle)
+    shoulder_send = formershoulder
+    elbow_send = formerelbow
+    #shoulder.duty_u16(shoulderduty_cycle)
+    #elbow.duty_u16(elbowduty_cycle)
+      
+    shoulder.duty_u16(shoulder_send)
+    elbow.duty_u16(elbow_send)
+    
     return shoulderduty_cycle, elbowduty_cycle
+
+def convert_potentiometer_to_x(degreeX):
+    convertX = x_max/65535
+    xval = convertX * degreeX
+    print ("X Coordinate:" + str(xval), end = '\r')
+
+    return xval
+
+def convert_potentiometer_to_y(degreeY):
+    convertY = y_max/65535
+    yval = y_max - convertY * degreeY
+    print ("                             Y Coordinate:" + str(yval), end = '\r')
+
+    return yval
+def read_potentiometer():
+    while True:
+        if pinx.read_u16() > 0:
+            degreeX = pinx.read_u16()
+            x_val = convert_potentiometer_to_x(degreeX)
+            if x_val < x_min:
+                x_val = x_min
+            if x_val > x_max:
+                x_val = x_max
+        else: x_val = x_min
+        if piny.read_u16() > 0:
+            degreeY = piny.read_u16()
+            y_val = convert_potentiometer_to_y(degreeY)
+            if y_val < y_min:
+                y_val = y_min
+            if y_val > y_max:
+                y_val = y_max
+        else: y_val = y_min
+        return x_val,y_val
 
 
 #initialize pwm 
 shoulder_pin = 0
 elbow_pin = 1
 wrist_pin = 2
+piny = ADC(27)
+pinx = ADC(26)
 shoulder = PWM(Pin(shoulder_pin))
 elbow = PWM(Pin(elbow_pin))
 wrist = PWM(Pin(wrist_pin))
@@ -79,13 +119,13 @@ elbow.freq(50)
 wrist.freq(50)
 
 #initialize variables
-x_min = 50
+x_min = 20
 y_min = 30
-x_max = 120
-y_max = 150
+x_max = 200
+y_max = 215
 x_knob_uni = ADC(26)
 y_knob_uni = ADC(27)
-
+button = Pin("GP22",Pin.IN)
 #set freq for shoulder and elbow
 shoulder.freq(50)
 elbow.freq(50)
@@ -100,36 +140,44 @@ x_increasing = True
 y_increasing = True
 mod_value = 1
 wrist_down = translate(20)
+wrist_up = translate(0)
+wrist.duty_u16(wrist_up)
+
+angles = get_angles(x_val, y_val)
+shoulder_angle = angles[0]
+elbow_angle = angles[1]
+
+old_values = move_servos(shoulder_angle, elbow_angle, 0, 0)
 wrist.duty_u16(wrist_down)
+wristDown = True
+
 try:
-
     while True:
-        if x_increasing:
-            x_val += mod_value
-        else:
-            x_val -= mod_value
-        if y_increasing:
-            y_val += mod_value
-        else:
-            y_val -= mod_value
-        angles = get_angles(x_val, y_val)
-        shoulder_angle = angles[0]
-        elbow_angle = angles[1]
-        angles = get_angles(x_val, y_val)
-        shoulder_angle = angles[0]
-        elbow_angle = angles[1]
-
-        move_servos(shoulder_angle, elbow_angle)
-        if x_val >= x_max:
-            x_increasing = False
-        if x_val <= x_min:
-            x_increasing = True
-        if y_val >= y_max:
-            y_increasing = False
-        if y_val <= y_min:
-            y_increasing = True
-        mod_value = 1+3*(random.random())
-        time.sleep_us(3000*(int(mod_value)))
+        while wristDown:
+            
+            values = read_potentiometer()
+            x_val = values[0]
+            y_val = values[1]
+            angles = get_angles(x_val, y_val)
+            shoulder_angle = angles[0]
+            elbow_angle = angles[1]
+            time.sleep_ms(20)
+            
+            old_values = move_servos(shoulder_angle, elbow_angle, old_values[0], old_values[1])
+            if (button.value() == 1):
+                while (button.value() != 0):
+                    pass
+                    #do nothing while you wait for the button to be un-pressed
+                wristDown = False
+        while not wristDown:
+            wrist.duty_u16(wrist_up)
+            if (button.value() == 1):
+                while (button.value() != 0):
+                    pass
+                    #do nothing while you wait for the button to be un-pressed
+                wristDown = True
+                wrist.duty_u16(wrist_down)
+        
 finally:
     shoulder.deinit()
     elbow.deinit()
