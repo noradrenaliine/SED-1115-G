@@ -102,7 +102,6 @@ mod_value = 1
 wrist_down = translate(20)
 wrist.duty_u16(wrist_down)
 try:
-
     while True:
         if x_increasing:
             x_val += mod_value
