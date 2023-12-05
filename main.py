@@ -1,10 +1,7 @@
 #import needed libraries and functions
 from machine import PWM, ADC, Pin
-#from armfuncs import angles_to_duty_cycles as move_servos
-#from IK import get_angles
 import math
 import time
-import random
 #function definitions:
 
 def translate(angle:float) -> int: #translates an angle into a PWM output
