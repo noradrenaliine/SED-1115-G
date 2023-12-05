@@ -10,16 +10,13 @@ def translate(angle:float) -> int: #translates an angle into a PWM output
         #Calculates the PWM output using a linear interpolation formula
         #PWM is turned into 16-bit range (0 to 65535) and returned
         pwm_out = int((500 + (2000) * (angle / 180))*65535/20000)
-    
     #angle is greater than 180 degrees,  default PWM output of 8192 
    elif angle > 180:
-        pwm_out = 8192
-    
+        pwm_out = 8192    
     #angle is less than 0 degrees,  default PWM output of 1638
     else:
         pwm_out = 1638
     return pwm_out
-
 
 
 def get_angles (cx,cy): #calculates brachiograph shoulder and elbow angles given x/y coordinates
