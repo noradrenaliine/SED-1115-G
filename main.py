@@ -1,26 +1,28 @@
 #import needed libraries and functions
 from machine import PWM, ADC, Pin
-#from armfuncs import angles_to_duty_cycles as move_servos
-#from IK import get_angles
 import math
 import time
-import random
 #function definitions:
 
 def translate(angle:float) -> int: #translates an angle into a PWM output
-    if 0<= angle <= 180:
+   #The function checks if the input angle is between 0 and 180 degrees .
+   if 0<= angle <= 180:
+        #Calculates the PWM output using a linear interpolation formula
+        #PWM is turned into 16-bit range (0 to 65535) and returned
         pwm_out = int((500 + (2000) * (angle / 180))*65535/20000)
-    elif angle > 180:
-        pwm_out = 8192 #default to maximum is angle is too big
+    #angle is greater than 180 degrees,  default PWM output of 8192 
+   elif angle > 180:
+        pwm_out = 8192    
+    #angle is less than 0 degrees,  default PWM output of 1638
     else:
-        pwm_out = 1638 #otherwise default to minimum
+        pwm_out = 1638
     return pwm_out
 
 
 def get_angles (cx,cy): #calculates brachiograph shoulder and elbow angles given x/y coordinates
-    
-    ax = -50
-    ay = 139.5
+#fixed servo positions on grid   
+    ax = -50 #furthest travel along x (mounting point of shoulder)
+    ay = 139.5 #furthest travel along y (mounting point of shoulder
     la = 155
     lb = 155
 
@@ -30,9 +32,11 @@ def get_angles (cx,cy): #calculates brachiograph shoulder and elbow angles given
     Aacb = math.asin((la * math.sin(Abac) / (lb)))
     Ayac = math.acos((ay**2 + ac**2 - abase_c**2) / (2*ay*ac))
 
+#interpreting analog values to something the servos can use
     alpha = math.degrees(Abac + Ayac)
     beta = math.degrees(Abac + Aacb)
-    
+
+#ensures pen stays on plane     
     servoA = alpha - 75
     servoB = 150 - beta 
     
@@ -142,22 +146,15 @@ y_val = values[1]
 #the try here is not part of a try/except but a try/finally
 #so that the servos deinitialize when the 
 #program is stopped.
-x_modifier = 1
-y_modifier = 1
+ 
 try: 
     while True: #loops forever :)
-        
         old_x = x_val
         old_y = y_val
         values = read_potentiometer()
         x_val = values[0]
         y_val = values[1]
-        '''
-        x_modifier = random.random()*50-25
-        y_modifier = random.random()*100-50
-        x_val += x_modifier
-        y_val += y_modifier
-        '''
+        
         #smooth the movement if a big jump is requested
         if abs(x_val-old_x)>smooththreshold:
             if x_val>old_x:
@@ -180,26 +177,15 @@ try:
         move_servos(shoulder_angle, elbow_angle)
         if (button.value() == 1): #if the button is pressed, this triggers and activates the
                                     #while not wristDown: loop.
-            
+            while (button.value() != 0):
+                pass
+                #do nothing while you wait for the button to be un-pressed
             if wristDown:
                 wrist.duty_u16(wrist_up)
                 wristDown = False #now the button is un-pressed and so it flips the boolean the other way to activate the other loop
             else:
                 wrist.duty_u16(wrist_down)
                 wristDown = True
-            while (button.value() != 0):
-                pass
-                #do nothing while you wait for the button to be un-pressed
-        '''
-        while not wristDown:
-            wrist.duty_u16(wrist_up) #lift the wrist since the wrist is up if wristDown isn't true
-            if (button.value() == 1): #activates when the button is pressed
-                while (button.value() != 0): #waits for the button to be un-pressed
-                    pass
-                    #do nothing while you wait for the button to be un-pressed
-                wristDown = True #now the button is un-pressed and so it flips the boolean the other way to activate the other loop
-                wrist.duty_u16(wrist_down)
-        '''
         
 finally: #deinitialize the servos so that they don't get damaged after the program is done running
     shoulder.deinit()
