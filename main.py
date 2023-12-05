@@ -15,7 +15,7 @@ def translate(angle:float) -> int: #translates an angle into a PWM output
 
 
 def get_angles (cx,cy): #calculates brachiograph shoulder and elbow angles given x/y coordinates
-    
+#fixed servo positions on grid     
     ax = -50
     ay = 139.5
     la = 155
@@ -27,9 +27,11 @@ def get_angles (cx,cy): #calculates brachiograph shoulder and elbow angles given
     Aacb = math.asin((la * math.sin(Abac) / (lb)))
     Ayac = math.acos((ay**2 + ac**2 - abase_c**2) / (2*ay*ac))
 
+#interpreting analog values to something the servos can use
     alpha = math.degrees(Abac + Ayac)
     beta = math.degrees(Abac + Aacb)
-    
+
+#ensures pen stays on plane     
     servoA = alpha - 75
     servoB = 150 - beta 
     
