@@ -20,9 +20,9 @@ def translate(angle:float) -> int: #translates an angle into a PWM output
 
 
 def get_angles (cx,cy): #calculates brachiograph shoulder and elbow angles given x/y coordinates
-#fixed servo positions on grid     
-    ax = -50
-    ay = 139.5
+#fixed servo positions on grid   
+    ax = -50 #furthest travel along x (mounting point of shoulder)
+    ay = 139.5 #furthest travel along y (mounting point of shoulder
     la = 155
     lb = 155
 
