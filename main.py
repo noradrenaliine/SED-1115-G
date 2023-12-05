@@ -117,8 +117,8 @@ y_min = 40 #minimum writable y coordinate
 x_max = 200 #maximum writable x coordinate
 y_max = 250 #maximum writable y coordinate
 
-smooththreshold = 10 #minimum difference in mm between 2 sequential coordinate readings needed to activate smoothing
-smoothamount = 7 #how many millimeters the arm limits itself to moving in each dimension when smoothing is active
+smooththreshold = 30 #minimum difference in mm between 2 sequential coordinate readings needed to activate smoothing
+smoothamount = 10 #how many millimeters the arm limits itself to moving in each dimension when smoothing is active
 
 wrist_down = translate(12) #position in degrees for the wrist servo to move the pencil into contact w paper
 wrist_up = translate(0) #position in degrees for the wrist servo to lift the pencil off the paper
@@ -142,15 +142,22 @@ y_val = values[1]
 #the try here is not part of a try/except but a try/finally
 #so that the servos deinitialize when the 
 #program is stopped.
- 
+x_modifier = 1
+y_modifier = 1
 try: 
     while True: #loops forever :)
+        
         old_x = x_val
         old_y = y_val
         values = read_potentiometer()
         x_val = values[0]
         y_val = values[1]
-        
+        '''
+        x_modifier = random.random()*50-25
+        y_modifier = random.random()*100-50
+        x_val += x_modifier
+        y_val += y_modifier
+        '''
         #smooth the movement if a big jump is requested
         if abs(x_val-old_x)>smooththreshold:
             if x_val>old_x:
